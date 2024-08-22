@@ -1,0 +1,41 @@
+name: Compile PDF on Merge to Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up LaTeX environment
+      uses: xu-cheng/latex-action@v2
+      with:
+        latexmk_use_lualatex: false
+
+    - name: Calculate version
+      id: version
+      run: |
+        YEAR=$(date +'%Y')
+        VERSION=$(git rev-list --count HEAD)
+        echo "VERSION=v${YEAR}.${VERSION}" >> $GITHUB_ENV
+
+    - name: Compile LaTeX document
+      run: |
+        pdflatex -synctex=1 -interaction=nonstopmode RC-HL-2024-Rules-Changes-Marked.tex
+        pdflatex -synctex=1 -interaction=nonstopmode RC-HL-2024-Rules-Changes-Marked.tex
+
+    - name: Rename PDF with version
+      run: |
+        mv RC-HL-2024-Rules-Changes-Marked.pdf RC-HL-2024-Rules-Changes-Marked-${{ env.VERSION }}.pdf
+
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: RC-HL-2024-Rules-Changes-Marked-${{ env.VERSION }}
+        path: RC-HL-2024-Rules-Changes-Marked-${{ env.VERSION }}.pdf

@@ -1,5 +1,5 @@
-# Rules
-RoboCup Soccer Humanoid League challenge rules
+# Regras da RoboCup Brasil Soccer Humanoid League - Entry Level
+Esse é o repositorio que fazemos a manutenção das regras da RoboCup Brasil Soccer Humanoid League - Entry Level.
 
 Para compilar o arquivo em PDF, execute o comando:
 ```bash
