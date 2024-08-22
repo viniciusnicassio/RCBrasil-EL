@@ -1,0 +1,33 @@
+name: Compile PDF on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up LaTeX environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
+
+    - name: Compile LaTeX document
+      run: |
+        pdflatex -synctex=1 RC-HL-2024-Rules-Changes-Marked.tex
+        pdflatex -synctex=1 RC-HL-2024-Rules-Changes-Marked.tex
+
+    - name: Check for compilation errors
+      run: |
+        if [ $? -ne 0 ]; then
+          echo "LaTeX compilation failed"
+          exit 1
+        else
+          echo "LaTeX compilation succeeded"
+        fi
